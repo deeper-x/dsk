@@ -1,6 +1,6 @@
 [![Rust](https://github.com/deeper-x/dsk/actions/workflows/rust.yml/badge.svg)](https://github.com/deeper-x/dsk/actions/workflows/rust.yml)
 
-# dsk - Deepseek Interactive command line (API client)
+# dsk - Deepseek CLI (API client)
 
 An interactive CLI chat app for DeepSeek's API, written in Rust.
 
