@@ -1,3 +1,5 @@
+[![Rust](https://github.com/deeper-x/dsk/actions/workflows/rust.yml/badge.svg)](https://github.com/deeper-x/dsk/actions/workflows/rust.yml)
+
 # deepseek-chat
 
 An interactive CLI chat app for DeepSeek's API, written in Rust.
