@@ -28,7 +28,7 @@ cargo run
 
 ```
 ╔══════════════════════════════════════╗
-║       DeepSeek Interactive Chat      ║
+║  dsk - DeepSeek cli                  ║
 ║  Type 'exit' or 'quit' to leave      ║
 ║  Type 'clear' to reset the history   ║
 ╚══════════════════════════════════════╝
