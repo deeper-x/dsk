@@ -27,17 +27,35 @@ cargo run
 ## Usage
 
 ```
-╔══════════════════════════════════════╗
-║       DeepSeek Interactive Chat      ║
-║  Type 'exit' or 'quit' to leave      ║
-║  Type 'clear' to reset the history   ║
-╚══════════════════════════════════════╝
+$ cargo run 
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.12s
+     Running `target/debug/dsk`
+╔════════════════════════════════════════════╗
+║  dsk - DeepSeek cli                        ║
+║  Type 'exit' or 'quit' to leave            ║
+║  Type 'clear' to reset the history         ║
+╚════════════════════════════════════════════╝
 
-Human> Who are you?
+Human> explain what dyn means in rust
 
-Machine> I'm DeepSeek, an AI assistant...
+Machine> In Rust, dyn is a keyword used to create trait objects, which enable dynamic dispatch (runtime polymorphism). Here's a comprehensive explanation:
 
-Human> _
+What dyn Means
+
+dyn is short for "dynamic" and indicates that method calls on this trait will be resolved at runtime rather than compile time.
+
+Basic Syntax:
+
+// Trait definition                         
+trait Animal {                              
+    fn speak(&self);                        
+}                                           
+
+
+// Using dyn to create a trait object       
+let animal: &dyn Animal = &Cat;             
+// or                                       
+let animal: Box<dyn Animal> = Box::new(Dog);
 ```
 
 ### Commands
