@@ -74,4 +74,5 @@ let animal: Box<dyn Animal> = Box::new(Dog);
 - Using `clear` wipes that history, starting a fresh context. 
 
 ## TODO 
-The model used is `deepseek-chat` (DeepSeek-V3). Change it in settings.
+- The model used is `deepseek-chat` (DeepSeek-V3). Change it in settings.
+- Test, test, test!!!
