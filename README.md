@@ -69,5 +69,7 @@ let animal: Box<dyn Animal> = Box::new(Dog);
 ## Notes
 
 - The full conversation history is sent on every request, giving the model multi-turn memory.
-- Using `clear` wipes that history, starting a fresh context.
-- The model used is `deepseek-chat` (DeepSeek-V3). Change it in `main.rs` if needed.
+- Using `clear` wipes that history, starting a fresh context. 
+
+## TODO 
+The model used is `deepseek-chat` (DeepSeek-V3). Change it in settings.
