@@ -24,7 +24,7 @@ Or run directly:
 cargo run
 ```
 
-## Usage
+## Usage example:
 
 ```
 $ cargo run 
