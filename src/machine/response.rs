@@ -1,4 +1,4 @@
-use crate::data_models::chat::{ChatRequest, ChatResponse, Message};
+use crate::data_models::ai::{ChatRequest, ChatResponse, Message};
 use crate::settings::api;
 
 use reqwest::Client;

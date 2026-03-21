@@ -1,4 +1,4 @@
-use crate::data_models::chat::{Message, Role};
+use crate::data_models::ai::{Message, Role};
 use crate::machine::response::send_message;
 use io::Error;
 use reqwest::Client;
@@ -15,13 +15,24 @@ pub fn print_motd() -> () {
     println!();
 }
 
+fn print_ps1(role: Role) -> () {
+    match role {
+        Role::User => {
+            print!("Human>")
+        }
+        Role::Assistant => {
+            print!("Machine>")
+        }
+    }
+}
+
 pub async fn run() -> () {
     let mut history: Vec<Message> = Vec::new();
 
     let stdin: io::Stdin = io::stdin();
 
     loop {
-        print!("Human> ");
+        print_ps1(Role::User);
 
         let out: Result<(), Error> = io::stdout().flush();
 
@@ -83,7 +94,7 @@ pub async fn run() -> () {
         // Call DeepSeek API
         match send_message(&client, &api_key, &history).await {
             Ok(reply) => {
-                print!("\nMachine> ");
+                print_ps1(Role::Assistant);
 
                 let out: Result<(), Error> = io::stdout().flush();
 
