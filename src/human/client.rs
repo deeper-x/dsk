@@ -1,12 +1,14 @@
 use crate::data_models::ai::{Message, Role};
-use crate::machine::response::send_message;
+use crate::data_models::errors::AIError;
+use crate::machine::engine::send_message;
+use crate::settings;
 use io::Error;
 use reqwest::Client;
 
 use std::io::{self, BufRead, Write};
 use termimad::MadSkin;
 
-pub fn print_motd() -> () {
+fn print_motd() -> () {
     println!("╔════════════════════════════════════════════╗");
     println!("║  dsk - DeepSeek cli                        ║");
     println!("║  Type 'exit' or 'quit' to leave            ║");
@@ -18,15 +20,26 @@ pub fn print_motd() -> () {
 fn print_ps1(role: Role) -> () {
     match role {
         Role::User => {
-            print!("Human>")
+            print!("You> ")
         }
         Role::Assistant => {
-            print!("Machine>")
+            print!("AI> ")
         }
     }
 }
 
-pub async fn run() -> () {
+pub fn get_api_key_env() -> Result<String, AIError> {
+    let api_key = std::env::var(settings::api::DEEPSEEK_API_KEY);
+
+    match api_key {
+        Ok(key) => Ok(key),
+        Err(e) => Err(AIError::Env(e)),
+    }
+}
+
+pub async fn run(api_key: String) -> () {
+    print_motd();
+
     let mut history: Vec<Message> = Vec::new();
 
     let stdin: io::Stdin = io::stdin();
@@ -84,12 +97,6 @@ pub async fn run() -> () {
 
         let client: Client = Client::new();
         let skin: MadSkin = MadSkin::default();
-
-        let api_key: String = std::env::var("DEEPSEEK_API_KEY").unwrap_or_else(|_| {
-            eprintln!("Error: DEEPSEEK_API_KEY environment variable not set.");
-            eprintln!("Export it with: export DEEPSEEK_API_KEY=<your_key>");
-            std::process::exit(1);
-        });
 
         // Call DeepSeek API
         match send_message(&client, &api_key, &history).await {

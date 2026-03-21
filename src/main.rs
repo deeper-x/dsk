@@ -8,7 +8,17 @@ use human::client;
 // Main
 #[tokio::main]
 async fn main() {
-    client::print_motd();
+    let api_key = human::client::get_api_key_env();
 
-    client::run().await;
+    match api_key {
+        Ok(k) => client::run(k).await,
+        Err(e) => {
+            eprint!(
+                "Error {}: {} environment variable not set.\n",
+                e,
+                settings::api::DEEPSEEK_API_KEY
+            );
+            std::process::exit(1);
+        }
+    }
 }
