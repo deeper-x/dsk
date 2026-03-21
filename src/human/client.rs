@@ -1,6 +1,8 @@
+use crate::data_models::chat::{Message, Role};
 use crate::machine::response::send_message;
-use crate::mytypes::chat::Message;
+use io::Error;
 use reqwest::Client;
+
 use std::io::{self, BufRead, Write};
 use termimad::MadSkin;
 
@@ -16,15 +18,26 @@ pub fn print_motd() -> () {
 pub async fn run() -> () {
     let mut history: Vec<Message> = Vec::new();
 
-    let stdin = io::stdin();
+    let stdin: io::Stdin = io::stdin();
 
     loop {
         print!("Human> ");
-        io::stdout().flush().unwrap();
+
+        let out: Result<(), Error> = io::stdout().flush();
+
+        match out {
+            Ok(_) => {}
+            Err(e) => {
+                eprintln!("Error handling output: {e}");
+                break;
+            }
+        }
 
         // Read a line from stdin
-        let mut input = String::new();
-        match stdin.lock().read_line(&mut input) {
+        let mut input: String = String::new();
+        let line: Result<usize, Error> = stdin.lock().read_line(&mut input);
+
+        match line {
             Ok(0) => break, // EOF (e.g. Ctrl-D)
             Ok(_) => {}
             Err(e) => {
@@ -33,13 +46,13 @@ pub async fn run() -> () {
             }
         }
 
-        let input = input.trim().to_string();
+        let input_str: String = input.trim().to_string();
 
-        if input.is_empty() {
+        if input_str.is_empty() {
             continue;
         }
 
-        match input.to_lowercase().as_str() {
+        match input_str.to_lowercase().as_str() {
             "exit" | "quit" => {
                 println!("Goodbye!");
                 break;
@@ -54,14 +67,14 @@ pub async fn run() -> () {
 
         // Append user message to history
         history.push(Message {
-            role: "user".to_string(),
-            content: input.clone(),
+            role: Role::User.to_string(),
+            content: input_str.clone(),
         });
 
-        let client = Client::new();
-        let skin = MadSkin::default();
+        let client: Client = Client::new();
+        let skin: MadSkin = MadSkin::default();
 
-        let api_key = std::env::var("DEEPSEEK_API_KEY").unwrap_or_else(|_| {
+        let api_key: String = std::env::var("DEEPSEEK_API_KEY").unwrap_or_else(|_| {
             eprintln!("Error: DEEPSEEK_API_KEY environment variable not set.");
             eprintln!("Export it with: export DEEPSEEK_API_KEY=<your_key>");
             std::process::exit(1);
@@ -71,13 +84,23 @@ pub async fn run() -> () {
         match send_message(&client, &api_key, &history).await {
             Ok(reply) => {
                 print!("\nMachine> ");
-                io::stdout().flush().unwrap();
+
+                let out: Result<(), Error> = io::stdout().flush();
+
+                match out {
+                    Ok(_) => {}
+                    Err(e) => {
+                        eprintln!("Error handling output: {e}");
+                        break;
+                    }
+                }
+
                 skin.print_text(&reply);
                 println!();
 
                 // Append assistant reply to history for multi-turn context
                 history.push(Message {
-                    role: "assistant".to_string(),
+                    role: Role::Assistant.to_string(),
                     content: reply,
                 });
             }
@@ -85,6 +108,7 @@ pub async fn run() -> () {
                 eprintln!("\n[API Error] {e}\n");
                 // Remove the last user message so the history stays consistent
                 history.pop();
+                break;
             }
         }
     }

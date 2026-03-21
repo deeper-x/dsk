@@ -1,4 +1,5 @@
-use crate::mytypes::chat::{ChatRequest, ChatResponse, Message};
+use crate::data_models::chat::{ChatRequest, ChatResponse, Message};
+use crate::settings::api;
 
 use reqwest::Client;
 
@@ -14,7 +15,7 @@ pub async fn send_message(
     };
 
     let response = client
-        .post("https://api.deepseek.com/chat/completions")
+        .post(api::DEEPSEEK_URI)
         .header("Authorization", format!("Bearer {}", api_key))
         .header("Content-Type", "application/json")
         .json(&request_body)

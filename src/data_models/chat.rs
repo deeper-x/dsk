@@ -1,6 +1,22 @@
-// ── API types ────────────────────────────────────────────────────────────────
-
 use serde::{Deserialize, Serialize};
+
+#[derive(Serialize, Clone)]
+pub enum Role {
+    User,
+    Assistant,
+}
+
+impl Role {
+    const USER_STR: &'static str = "user";
+    const ASSISTANT_STR: &'static str = "assistant";
+
+    pub fn to_string(&self) -> String {
+        match self {
+            Role::User => Self::USER_STR.to_string(),
+            Role::Assistant => Self::ASSISTANT_STR.to_string(),
+        }
+    }
+}
 
 #[derive(Serialize, Clone)]
 pub struct Message {

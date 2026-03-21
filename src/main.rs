@@ -1,6 +1,7 @@
+mod data_models;
 mod human;
 mod machine;
-mod mytypes;
+mod settings;
 
 use human::client;
 
@@ -8,5 +9,6 @@ use human::client;
 #[tokio::main]
 async fn main() {
     client::print_motd();
+
     client::run().await;
 }
