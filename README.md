@@ -1,6 +1,6 @@
 [![Rust](https://github.com/deeper-x/dsk/actions/workflows/rust.yml/badge.svg)](https://github.com/deeper-x/dsk/actions/workflows/rust.yml)
 
-# deepseek-chat
+# dsk - Deepseek CLI (API client)
 
 An interactive CLI chat app for DeepSeek's API, written in Rust.
 
@@ -74,4 +74,5 @@ let animal: Box<dyn Animal> = Box::new(Dog);
 - Using `clear` wipes that history, starting a fresh context. 
 
 ## TODO 
-The model used is `deepseek-chat` (DeepSeek-V3). Change it in settings.
+- The model used is `deepseek-chat` (DeepSeek-V3). Change it in settings.
+- Test, test, test!!!
