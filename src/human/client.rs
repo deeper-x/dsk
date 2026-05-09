@@ -8,13 +8,14 @@ use reqwest::Client;
 use std::io::{self, BufRead, Write};
 use termimad::MadSkin;
 
-// see https://en.wikipedia.org/wiki/ANSI_escape_code for ansi color codes list (red: 31, blue: 34, ...)
 enum PS1 {
     Red,
     Blue,
 }
 
 impl PS1 {
+    // see https://en.wikipedia.org/wiki/ANSI_escape_code for
+    // ansi color codes list (red: 31, blue: 34, ...)
     fn code(&self) -> &'static str {
         match self {
             PS1::Blue => "34",
@@ -22,10 +23,13 @@ impl PS1 {
         }
     }
 
-    fn print(&self, who: &'static str) -> () {
-        let out = format!("\x1b[{}m{}>\x1b[0m ", self.code(), who);
+    fn print(&self, role: Role) {
+        let label = match role {
+            Role::User => "You ",
+            Role::Assistant => "AI ",
+        };
 
-        print!("{}", out);
+        print!("\x1b[{}m{}>\x1b[0m ", self.code(), label);
     }
 }
 
@@ -36,13 +40,6 @@ fn print_motd() -> () {
     println!("║  Type 'clear' to reset the history         ║");
     println!("╚════════════════════════════════════════════╝");
     println!();
-}
-
-fn print_ps1(role: Role) -> () {
-    match role {
-        Role::User => PS1::Red.print("You"),
-        Role::Assistant => PS1::Blue.print("AI"),
-    }
 }
 
 pub fn get_api_key_env() -> String {
@@ -67,7 +64,7 @@ pub async fn run(api_key: String) -> () {
     let stdin: io::Stdin = io::stdin();
 
     loop {
-        print_ps1(Role::User);
+        PS1::Blue.print(Role::User);
 
         let out: Result<(), Error> = io::stdout().flush();
 
@@ -123,7 +120,7 @@ pub async fn run(api_key: String) -> () {
         // Call DeepSeek API
         match send_message(&client, &api_key, &history).await {
             Ok(reply) => {
-                print_ps1(Role::Assistant);
+                PS1::Red.print(Role::Assistant);
 
                 let out: Result<(), Error> = io::stdout().flush();
 
