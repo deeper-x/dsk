@@ -1,8 +1,8 @@
 use crate::data_models::ai::{Message, Role};
-use crate::data_models::errors::AIError;
 use crate::machine::engine::send_message;
 use crate::settings;
 use io::Error;
+use log::error;
 use reqwest::Client;
 
 use std::io::{self, BufRead, Write};
@@ -28,12 +28,17 @@ fn print_ps1(role: Role) -> () {
     }
 }
 
-pub fn get_api_key_env() -> Result<String, AIError> {
+pub fn get_api_key_env() -> String {
     let api_key = std::env::var(settings::api::DEEPSEEK_API_KEY);
 
     match api_key {
-        Ok(key) => Ok(key),
-        Err(e) => Err(AIError::Env(e)),
+        Ok(key) => key,
+        Err(e) => {
+            eprintln!("error running api key env: {e}");
+            error!("error running api key env: {e}");
+
+            std::process::exit(1);
+        }
     }
 }
 
