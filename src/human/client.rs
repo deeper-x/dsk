@@ -8,6 +8,27 @@ use reqwest::Client;
 use std::io::{self, BufRead, Write};
 use termimad::MadSkin;
 
+// see https://en.wikipedia.org/wiki/ANSI_escape_code for ansi color codes list (red: 31, blue: 34, ...)
+enum PS1 {
+    Red,
+    Blue,
+}
+
+impl PS1 {
+    fn code(&self) -> &'static str {
+        match self {
+            PS1::Blue => "34",
+            PS1::Red => "31",
+        }
+    }
+
+    fn print(&self, who: &'static str) -> () {
+        let out = format!("\x1b[{}m{}>\x1b[0m ", self.code(), who);
+
+        print!("{}", out);
+    }
+}
+
 fn print_motd() -> () {
     println!("╔════════════════════════════════════════════╗");
     println!("║  dsk - DeepSeek cli                        ║");
@@ -19,12 +40,8 @@ fn print_motd() -> () {
 
 fn print_ps1(role: Role) -> () {
     match role {
-        Role::User => {
-            print!("\x1b[31mYou>\x1b[0m ")
-        }
-        Role::Assistant => {
-            print!("\x1b[34mAI>\x1b[0m ")
-        }
+        Role::User => PS1::Red.print("You"),
+        Role::Assistant => PS1::Blue.print("AI"),
     }
 }
 
