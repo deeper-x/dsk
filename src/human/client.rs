@@ -20,10 +20,10 @@ fn print_motd() -> () {
 fn print_ps1(role: Role) -> () {
     match role {
         Role::User => {
-            print!("You> ")
+            print!("\x1b[31mYou>\x1b[0m ")
         }
         Role::Assistant => {
-            print!("AI> ")
+            print!("\x1b[34mAI>\x1b[0m ")
         }
     }
 }
